@@ -1,0 +1,92 @@
+@import 'styles/colors';
+
+.audio {
+  height: 48px;
+  width: 352px;
+  border-radius: 48px;
+  background-color: #EAF0FA;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 20px;
+
+  &__time {
+    font-size: 15px;
+    width: 30px;
+  }
+
+  &__play,
+  &__stop {
+    height: 24px;
+    width: 24px;
+    background-color: #fff;
+    border-radius: 50%;
+    color: $accent;
+  }
+
+  .play_icon {
+    margin-top: 4px;
+    margin-left: 3px;
+  }
+
+  .stop_icon {
+    margin-top: 2px;
+  }
+
+  &__progress {
+    user-select: none;
+    height: 16px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover span {
+      opacity: 1;
+    }
+
+    & > span {
+      font-size: 15px;
+      top: -70%;
+      left: 0px;
+      position: absolute;
+      opacity: 0;
+      transition: opacity 0.1s;
+    }
+
+    & > progress {
+      height: 4px;
+      width: 164px;
+      border-radius: 12px;
+      background-color: $icon;
+
+  
+      &::-moz-progress-bar {
+        border-radius: 12px;
+      }
+  
+      &::-webkit-progress-bar {
+        background-color: $icon;
+        border-radius: 12px;
+      }
+  
+      &::-webkit-progress-value {
+        background-color: $accent;
+        border-top-left-radius: 12px;
+        border-bottom-left-radius: 12px;
+      }
+    }
+
+  }
+
+  &__download,
+  &__reset {
+    color: $icon;
+
+    &:active {
+      color: $accent;
+    }
+  }
+}

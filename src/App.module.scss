@@ -1,0 +1,33 @@
+:root {
+  font-family: 'SF Pro Display', sans-serif;
+  overflow-y: scroll;
+}
+
+.layout {
+  min-height: 100vh;
+  background-color: #F1F4F9;
+  
+  display: grid;
+  grid-template-columns: max-content auto;
+  grid-template-rows: 64px auto;
+
+  grid-template-areas: 
+  "sidebar header"
+  "sidebar content";
+
+
+  &__sidebar {
+    grid-area: sidebar;
+  }
+
+  &__header {
+    overflow: hidden;
+    grid-area: header;
+    z-index: 100;
+  }
+
+  &__content {
+    grid-area: content;
+    margin-bottom: 20vh;
+  }
+}

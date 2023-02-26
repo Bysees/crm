@@ -1,0 +1,24 @@
+@import 'styles/colors';
+
+.button {
+  background-color: transparent;
+
+  & > svg {
+    color: $icon;
+    transition: 0.2s;
+  }
+
+  &:hover svg {
+    color: $accent-hover;
+  }
+
+  &:focus svg {
+    color: $accent-hover;
+  }
+
+  &_arrow-small.button_active svg,
+  &_arrow-medium.button_active svg {
+    transform: rotateX(-180deg);
+    color: $accent;
+  }
+}

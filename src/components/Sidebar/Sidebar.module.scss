@@ -1,0 +1,72 @@
+@import 'styles/colors';
+
+.wrapper {
+  height: 100%;
+  width: 240px;
+  background-color: $sidebar-bg;
+  padding: 20px 0;
+}
+
+.logo {
+  padding: 0 12px;
+  margin-bottom: 32px;
+}
+
+.list {
+  margin-bottom: 64px;
+  &__item {
+    padding: 14px 12px;
+    display: flex;
+    align-items: center;
+    color: #ffffff;
+    opacity: 0.6;
+    user-select: none;
+    cursor: pointer;
+
+    &_active {
+      position: relative;
+      opacity: 1;
+      background-color: $sidebar-bg-active;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 3px;
+        background-color: $accent;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 8px;
+        width: 8px;
+        border-radius: 50%;
+        background-color: #FFD500;
+        box-shadow: 0px 3px 8px 0px #EDDA0180;
+      }
+    }
+
+    & > img {
+      height: 24px;
+      width: 24px;
+    }
+
+    & > span {
+      margin-left: 12px;
+      text-transform: capitalize;
+      white-space: nowrap;
+    }
+  }
+}
+
+.addButton,
+.offerButton {
+  margin: 0 auto;
+  margin-bottom: 32px;
+}

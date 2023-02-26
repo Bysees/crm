@@ -1,0 +1,85 @@
+@import 'styles/colors';
+
+.filters {
+  height: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.reset {
+  margin-right: 50px;
+  width: fit-content;
+  color: $text-secondary;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+
+  &__button {
+    color: inherit;
+
+    & > svg {
+      margin-left: 8px;
+      width: 8px;
+      height: 8px;
+    }
+  
+    &:hover {
+      color: $accent-hover;
+    }
+  
+    &:active {
+      color: $accent-active;
+    }
+  }
+  
+
+}
+
+.filter + .filter {
+  margin-left: 32px;
+}
+
+.filter {
+  
+  &__head {
+    user-select: none;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+  }
+  
+  &__title {
+    font-size: 14px;
+    color: $text-secondary;
+    margin-right: 8px;
+  }
+
+
+  &__item {
+    user-select: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0 10px 0px 20px;
+    height: 40px;
+    transition: 0.1s;
+
+    font-size: 14px;
+    color: #899CB1;
+
+    &:hover {
+      color: #000;
+      background-color: #002efb1e;
+    }
+
+    &_active {
+      color: $accent;
+
+      &:hover {
+        color: $accent;
+      }
+    }
+  }
+}

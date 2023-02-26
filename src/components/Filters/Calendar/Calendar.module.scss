@@ -1,0 +1,74 @@
+@import 'styles/colors';
+
+.calendar {
+  height: 24px;
+  width: 115px;
+
+  &__buttons {
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  &__button {
+    color: $icon;
+    transition: 0.1s;
+    
+    &:first-child {
+      text-align: left;
+      flex-grow: 1;
+    }
+
+    &:last-child {
+      text-align: right;
+      flex-grow: 1;
+    }
+
+    &:hover {
+      color: $accent;
+    }
+  }
+
+  &__button_text {
+    // flex-grow: 1;
+
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & > span {
+      text-transform: capitalize;
+      color: $accent;
+      margin-left: 8px;
+    }
+  }
+
+
+  &__item {
+    user-select: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 0 10px 0px 20px;
+    height: 40px;
+    transition: 0.1s;
+    
+    font-size: 14px;
+    color: #899CB1;
+
+    &:hover {
+      color: #000;
+      background-color: #002efb1e;
+    }
+
+    &_active {
+      color: $accent;
+
+      &:hover {
+        color: $accent;
+      }
+    }
+  }
+
+}
