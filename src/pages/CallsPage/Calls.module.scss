@@ -36,21 +36,28 @@
 
 
 .row {
+  min-height: 65px;
   padding: 10px 40px 10px 12px;
   display: grid;
   grid-template-columns: 32px 55px 90px 130px 325px 215px 175px auto;
   grid-template-rows: minmax(50px, auto);
   align-items: center;
 
-  border-bottom: 1px solid #EAF0FA;
   font-size: 15px;
 
 
   &_header {
     color: #899CB1;
+    border-bottom: 1px solid #EAF0FA;
+  }
+
+  &_date {
+    display: flex;
+    align-items: end;
   }
 
   &_content {
+    border-bottom: 1px solid #EAF0FA;
     &:hover {
       background-color: #D4DFF32B;
     }
@@ -109,6 +116,18 @@
   }
 
   .duration {}
+}
+
+.rowDate {
+  position: relative;
+
+  &__count {
+    position: absolute;
+    bottom: 50%;
+    left: 105%;
+    font-size: 12px;
+    color: $icon;
+  }
 }
 
 .checkbox {

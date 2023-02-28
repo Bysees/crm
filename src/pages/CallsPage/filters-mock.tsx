@@ -1,3 +1,4 @@
+import { getDateTimeAgo, getDateTime } from 'src/utils/time'
 import { Crumbs } from '../../components/UI/Crumbs'
 import { Grade } from '../../components/UI/Grade'
 
@@ -49,11 +50,40 @@ export const grades = [
   { id: 8, content: <Crumbs type='great' />, value: null }
 ]
 
+//* startDate: YYYY-MM-DD
+//* endDate: YYYY-MM-DD
 export const dates = [
-  { id: 0, content: '3 дня', value: { count: 3, type: 'day' } },
-  { id: 1, content: 'Неделя', value: { count: 7, type: 'day' } },
-  { id: 2, content: 'Месяц', value: { count: 1, type: 'month' } },
-  { id: 3, content: 'Год', value: { count: 1, type: 'year' } }
-] as const
+  {
+    id: 0,
+    content: '3 дня' as const,
+    startDate: getDateTimeAgo(3, 'day'),
+    endDate: getDateTime(new Date())
+  },
+  {
+    id: 1,
+    content: 'Неделя' as const,
+    startDate: getDateTimeAgo(7, 'day'),
+    endDate: getDateTime(new Date())
+  },
+  {
+    id: 2,
+    content: 'Месяц' as const,
+    startDate: getDateTimeAgo(1, 'month'),
+    endDate: getDateTime(new Date())
+  },
+  {
+    id: 3,
+    content: 'Год' as const,
+    startDate: getDateTimeAgo(1, 'year'),
+    endDate: getDateTime(new Date())
+  },
+  {
+    id: 4,
+    content: 'manually' as const,
+    startDate: '',
+    endDate: ''
+  }
+]
+
 
 export type DateItemType = typeof dates[number]

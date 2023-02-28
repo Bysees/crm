@@ -2,7 +2,7 @@
 
 .calendar {
   height: 24px;
-  width: 115px;
+  min-width: 115px;
 
   &__buttons {
     height: 100%;
@@ -13,7 +13,7 @@
   &__button {
     color: $icon;
     transition: 0.1s;
-    
+
     &:first-child {
       text-align: left;
       flex-grow: 1;
@@ -30,12 +30,15 @@
   }
 
   &__button_text {
-    // flex-grow: 1;
-
+    padding: 0 10px;
     font-size: 14px;
     display: flex;
     justify-content: center;
     align-items: center;
+
+    & svg {
+      margin-right: 5px;
+    }
 
     & > span {
       text-transform: capitalize;
@@ -49,11 +52,13 @@
     user-select: none;
     cursor: pointer;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
     padding: 0 10px 0px 20px;
-    height: 40px;
+    min-height: 40px;
     transition: 0.1s;
-    
+
     font-size: 14px;
     color: #899CB1;
 
@@ -69,6 +74,37 @@
         color: $accent;
       }
     }
+
+
+  }
+
+  .datesRange {
+    display: flex;
+
+    &__line {
+      margin: 0 3px;
+    }
+  }
+
+  &__date {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    cursor: default;
+
+    & > span {
+      margin-top: 5px;
+      margin-bottom: 10px;
+    }
+
+    &:hover {
+      color: #899CB1;
+      background-color: #ffffff;
+    }
+
+    &_title {
+      margin-bottom: 10px;
+   }
+
   }
 
 }

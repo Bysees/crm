@@ -12,7 +12,7 @@ export const getTimeOnly = (dateString: string) => {
   return `${hours}:${minutes}`;
 }
 
-export const getDisplayDateFormat = (date: Date) => {
+export const getDisplayDateTime = (date: Date) => {
   const daysOfWeek = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
   const monthsOfYear = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
 
@@ -23,18 +23,19 @@ export const getDisplayDateFormat = (date: Date) => {
   return `${dayOfWeek}, ${dayOfMonth} ${month.slice(0, 3)}`
 }
 
-export const getDateTimeFormat = (date: Date) => {
+
+export const getDateTime = (date: Date) => {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const day = date.getDate().toString().padStart(2, '0');
+  
+  //* return: YYYY-MM-DD
   return `${year}-${month}-${day}`;
 }
 
-export const getDateRange = (count: number, type: 'day' | 'month' | 'year') => {
+export const getDateTimeAgo = (count: number, type: 'day' | 'month' | 'year') => {
   const currentDate = new Date();
-  const timezoneOffset = currentDate.getTimezoneOffset() * 60000;
   let startDate;
-  let endDate = new Date(Date.now() - timezoneOffset);
   
   if (type === 'day') {
     startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - count + 1);
@@ -52,10 +53,11 @@ export const getDateRange = (count: number, type: 'day' | 'month' | 'year') => {
     throw new Error('Invalid type parameter');
   }
 
-  const startDateString = startDate.toISOString().slice(0, 10);
-  const endDateString = endDate.toISOString().slice(0, 10);
+  const dateTimeAgo = startDate.toISOString().slice(0, 10);
   
-  return { startDate: startDateString, endDate: endDateString };
+  //* return: YYYY-MM-DD
+  return dateTimeAgo
 }
+
 
 

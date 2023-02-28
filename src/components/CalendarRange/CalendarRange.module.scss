@@ -1,0 +1,85 @@
+@import 'styles/colors';
+
+.calendar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  
+  &__items {
+    display: flex;
+  }
+
+  &__line {
+    margin: 0 2px;
+  }
+  
+  &__item {
+    font-size: 13px;
+    letter-spacing: 1px;
+    position: relative;
+    height: 20px;
+    width: 58px;
+
+    & > span {
+      display: flex;
+      align-items: center;
+      
+      position: absolute;
+      top: 0%;
+      left: 0;
+      height: 100%;
+      width: fit-content;
+    }
+
+    & > input[type="date"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+
+      background-color: transparent;
+
+      &:hover {
+        background-color: #002efb1e;
+      }
+
+      &::-webkit-datetime-edit {
+        display: none;
+        position: absolute;
+        z-index: -100;
+        visibility: 0;
+        opacity: 0;
+      }
+
+      &::-webkit-calendar-picker-indicator {
+        padding: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        opacity: 0;
+        border: 1px solid #000;
+        cursor: pointer;
+      }
+    }
+
+  }
+
+
+  &__acceptButton {
+    margin-right: 5px;
+    color: $icon;
+
+    &:hover,
+    &:focus {
+      color: $accent-hover;
+    }
+
+    &:active {
+      color: $accent-active;
+    }
+  }
+}

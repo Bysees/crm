@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import cn from 'classnames'
-import { getDateTimeFormat, getDisplayDateFormat } from 'src/utils/time'
+import { getDateTime, getDisplayDateTime } from 'src/utils/time'
 import { ToggleButton } from 'components/UI/ToggleButton'
 import styles from './Header.module.scss'
 import globalStyles from 'styles/global.module.scss'
@@ -15,8 +15,8 @@ const Header: FC<Props> = ({ className }) => {
   const username = 'ИП Сидорова Александра Михайловна'
   const avatar = ava
 
-  const dateDispay = getDisplayDateFormat(new Date())
-  const dateTime = getDateTimeFormat(new Date())
+  const dateDispay = getDisplayDateTime(new Date())
+  const dateTime = getDateTime(new Date())
 
   return (
     <header className={cn(className, styles.wrapper)}>

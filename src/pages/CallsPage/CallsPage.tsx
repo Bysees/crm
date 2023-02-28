@@ -1,23 +1,23 @@
-import { FC, useEffect, useMemo, useState } from 'react'
+import { FC, Fragment, useEffect, useMemo, useState } from 'react'
 import cn from 'classnames'
 import { Call } from './Call'
 import { Checkbox } from 'components/UI/Checkbox'
 import { Balance } from 'src/components/UI/Balance'
-import { Calendar } from 'src/components/Filters/Calendar'
+import { FilterDate } from 'src/components/Filters/FilterDate'
 import { Filters } from 'src/components/Filters'
 import { ICall } from 'src/types/Call'
 import { ApiService } from 'src/service/api'
 import {
   callTypes,
   DateItemType,
-  dates,
   employees,
   errorTypes,
   grades,
   sources,
-  types
+  types,
+  dates,
 } from 'src/pages/CallsPage/filters-mock'
-import { getDateRange } from 'src/utils/time'
+import { getDateTime, getDisplayDateTime } from 'src/utils/time'
 
 import styles from './Calls.module.scss'
 import globalStyles from 'styles/global.module.scss'
@@ -33,10 +33,6 @@ const CallsPage: FC<Props> = ({ className }) => {
   const [currentSource, setCurrentSource] = useState(sources[0])
   const [currentGrade, setCurrentGrade] = useState(grades[0])
   const [currentErrorType, setCurrentErrorType] = useState(errorTypes[0])
-
-  const [currentDateRange, setCurrentDateRange] = useState<DateItemType>(
-    dates[0]
-  )
 
   const filters = [
     { items: types, activeItem: currentType, setActiveItem: setCurrentType },
@@ -88,20 +84,6 @@ const CallsPage: FC<Props> = ({ className }) => {
 
   const [callList, setCallList] = useState<ICall[]>([])
 
-  useEffect(() => {
-    ;(async () => {
-      const count = currentDateRange.value.count
-      const type = currentDateRange.value.type
-      const { startDate, endDate } = getDateRange(count, type)
-
-      const { results: callListData } = await ApiService.getList(
-        startDate,
-        endDate
-      )
-      setCallList(callListData)
-    })()
-  }, [currentDateRange.id])
-
   const filtredCallList = useMemo(() => {
     let filtredList: ICall[] = callList
 
@@ -126,15 +108,49 @@ const CallsPage: FC<Props> = ({ className }) => {
     return filtredList
   }, [callList, currentType.id, currentSource.id, currentGrade.id])
 
+  //* initial dates
+
+  const [currentDateRange, setCurrentDateRange] = useState(() => {
+    const { startDate, endDate } = dates[0]
+
+    return {
+      startDate,
+      endDate
+    }
+  })
+
+  useEffect(() => {
+    ;(async () => {
+      const { startDate, endDate } = currentDateRange
+
+      const { results: callListData } = await ApiService.getList(
+        startDate,
+        endDate
+      )
+      setCallList(callListData)
+    })()
+  }, [currentDateRange.startDate, currentDateRange.endDate])
+
+  const tableCallList = filtredCallList.reduce((table, callItems) => {
+    const dateFormat = getDateTime(new Date(callItems.date))
+
+    if (table[dateFormat]) {
+      table[dateFormat].push(callItems)
+    } else {
+      table[dateFormat] = [callItems]
+    }
+
+    return table
+  }, {} as { [date: string]: ICall[] })
+
   return (
     <main className={cn(className, styles.wrapper)}>
       <div className={cn(globalStyles.container, styles.container)}>
         <section className={styles.filters}>
           <div className={styles.filters__row}>
             <Balance count={777} />
-            <Calendar
+            <FilterDate
               dates={dates}
-              currentDateRange={currentDateRange}
               setCurrentDateRange={setCurrentDateRange}
               className={styles.calendar}
             />
@@ -165,8 +181,41 @@ const CallsPage: FC<Props> = ({ className }) => {
             <div className={styles.row__duration}>Длительность</div>
           </header>
 
-          {filtredCallList.map((callItem) => {
-            return <Call key={callItem.id} {...callItem} />
+          {Object.keys(tableCallList).map((date) => {
+            const callRow = tableCallList[date]
+
+            const dayMilliseconds = 24 * 60 * 60 * 1000
+
+            const currentDate = new Date()
+            const yesterday = new Date(
+              currentDate.setTime(currentDate.getTime() - dayMilliseconds)
+            )
+
+            const isToday =
+              getDisplayDateTime(new Date(date)) ===
+              getDisplayDateTime(currentDate)
+
+            const isYesterday =
+              getDisplayDateTime(new Date(date)) ===
+              getDisplayDateTime(yesterday)
+
+            return (
+              <Fragment key={date}>
+                {!isToday && (
+                  <div className={cn(styles.row, styles.row_date)}>
+                    <div className={styles.rowDate}>
+                      <div>{isYesterday ? 'вчера' : getDisplayDateTime(new Date(date))}</div>
+                      <div className={styles.rowDate__count}>
+                        {callRow.length}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {callRow.map((callItem) => {
+                  return <Call key={callItem.id} {...callItem} />
+                })}
+              </Fragment>
+            )
           })}
         </section>
       </div>
