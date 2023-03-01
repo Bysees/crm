@@ -18,9 +18,9 @@ const CallDate: FC<Props> = ({ date, count }) => {
 
   return (
     <div className={cn(styles.row, styles.row_date)}>
-      <div className={styles.rowDate}>
+      <div className={styles.displayDate}>
         <div>{displayDate}</div>
-        <div className={styles.rowDate__count}>{count}</div>
+        <div className={styles.displayDate__count}>{count}</div>
       </div>
     </div>
   )

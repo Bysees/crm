@@ -1,22 +1,27 @@
 import { FC, MouseEventHandler, useState } from 'react'
 import cn from 'classnames'
-import { ApiService } from 'src/service/api'
-import { ICall } from 'src/types/Call'
+import { ApiService } from 'service/api'
+import { ICall } from 'types/Call'
 import { transformPhone } from 'src/utils/phone'
 import { getTimeOnly, secondsToMinutes } from 'src/utils/time'
 import { CustomAudio } from 'components/CustomAudio'
 import { Checkbox } from 'components/UI/Checkbox'
+import { Loader } from 'components/UI/Loader'
 import styles from './Calls.module.scss'
 
-import { ReactComponent as Incoming } from 'icons/incoming.svg'
-import { ReactComponent as Outgoing } from 'icons/outgoing.svg'
-import web from 'icons/web.svg'
+import { ReactComponent as IncomingIcon } from 'icons/incoming.svg'
+import { ReactComponent as OutgoingIcon } from 'icons/outgoing.svg'
+import { ReactComponent as WebIcon } from 'icons/web.svg'
 import mockAvatar from 'images/ava2.png'
-import { Loader } from 'src/components/UI/Loader'
 
-interface Props extends ICall {}
+interface Props extends ICall {
+  isCheked: boolean
+  toggleCheckbox: (id: number) => void
+}
 
 const CallItem: FC<Props> = ({
+  toggleCheckbox,
+  isCheked,
   id,
   in_out,
   date,
@@ -37,19 +42,14 @@ const CallItem: FC<Props> = ({
   const hasError = !!errors[0]
   const isIncoming = in_out === 1
   const isFailedCall = status === 'Не дозвонился'
-  const isSuccessCall = status === 'Дозвонился'
+  const hasRecord = !!record
 
   const [audio, setAudio] = useState<Blob | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isShowAudio, setIsShowAudio] = useState(false)
 
-  const hideAudio: MouseEventHandler = (e) => {
-    e.stopPropagation()
-    setIsShowAudio(false)
-  }
-
   const loadAudio = async () => {
-    if (record && !isLoading) {
+    if (hasRecord && !isLoading) {
       setIsLoading(true)
 
       const audio = await ApiService.getRecord(record, partnership_id)
@@ -60,37 +60,35 @@ const CallItem: FC<Props> = ({
   }
 
   const showAudio = async () => {
-    if (audio) {
-      setIsShowAudio(true)
-    }
-
     if (!audio) {
       await loadAudio()
-      setIsShowAudio(true)
     }
+
+    setIsShowAudio(true)
+  }
+
+  const hideAudio: MouseEventHandler = (e) => {
+    e.stopPropagation()
+    setIsShowAudio(false)
   }
 
   return (
-    <div
-      className={cn(styles.row, styles.row_content, record && styles.pointer)}
-      onClick={showAudio}>
-      <Checkbox checked={false} id={String(id)} />
+    <div className={cn(styles.row, styles.row_content)}>
+      <Checkbox
+        onChange={() => toggleCheckbox(id)}
+        checked={isCheked}
+        id={String(id)}
+      />
 
-      <div>
-        {isIncoming ? (
-          <Incoming className={cn(isFailedCall && styles.missed)} />
-        ) : (
-          <Outgoing className={cn(isFailedCall && styles.missed)} />
-        )}
+      <div className={cn(isFailedCall && styles.failed)}>
+        {isIncoming ? <IncomingIcon /> : <OutgoingIcon />}
       </div>
 
       <div>{getTimeOnly(date)}</div>
 
       <div className={styles.employee}>
         <img className={styles.employee__ava} src={avatarSrc} alt='avatar' />
-        {from_site === 0 && (
-          <img className={styles.employee__webIcon} src={web} alt='icon web' />
-        )}
+        {from_site === 0 && <WebIcon className={styles.employee__webIcon} />}
       </div>
 
       <div className={styles.call}>
@@ -112,9 +110,15 @@ const CallItem: FC<Props> = ({
         {hasError && <div className={styles.grade__error}>{errors[0]}</div>}
       </div>
 
-      <div className={cn(styles.duration, styles.row__duration)}>
+      <div
+        className={cn(
+          styles.duration,
+          styles.row__duration,
+          hasRecord && styles.pointer
+        )}
+        onClick={showAudio}>
         {isLoading ? (
-          <Loader />
+          <Loader className={styles.duration__loader} />
         ) : (
           <>
             {isShowAudio && audio && (
@@ -124,9 +128,7 @@ const CallItem: FC<Props> = ({
                 onHide={hideAudio}
               />
             )}
-            {!isShowAudio && isSuccessCall && (
-              <div> {secondsToMinutes(time)}</div>
-            )}
+            {!isShowAudio && hasRecord && <div>{secondsToMinutes(time)}</div>}
           </>
         )}
       </div>

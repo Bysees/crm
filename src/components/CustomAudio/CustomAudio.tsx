@@ -1,11 +1,12 @@
 import { FC, MouseEventHandler, MouseEvent, useLayoutEffect, useRef, useState } from 'react'
+import { secondsToMinutes } from 'src/utils/time'
 import styles from './CustomAudio.module.scss'
 
 import { ReactComponent as PlayIcon } from 'icons/audio/play.svg'
 import { ReactComponent as StopIcon } from 'icons/audio/stop.svg'
 import { ReactComponent as CloseIcon } from 'icons/audio/reset.svg'
 import { ReactComponent as LoadIcon } from 'icons/audio/load.svg'
-import { secondsToMinutes } from 'src/utils/time'
+
 
 interface Props {
   src: string

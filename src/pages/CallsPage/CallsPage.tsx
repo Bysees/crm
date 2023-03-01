@@ -15,7 +15,7 @@ import {
   types,
   dates
 } from 'src/pages/CallsPage/filters-mock'
-import { getDateTime, getDisplayDateTime } from 'src/utils/time'
+import { getDateTime } from 'src/utils/time'
 
 import styles from './Calls.module.scss'
 import globalStyles from 'styles/global.module.scss'
@@ -85,6 +85,28 @@ const CallsPage: FC<Props> = ({ className }) => {
 
   const [callList, setCallList] = useState<ICall[]>([])
 
+  const [chekedCallIds, setChekedCallIds] = useState<number[]>([])
+  const [isPressedAllCheked, setIsPressedAllCheked] = useState(false)
+
+  const toogleAllChekedIds = () => {
+    if (isPressedAllCheked) {
+      setChekedCallIds([])
+      setIsPressedAllCheked(false)
+      return
+    }
+
+    setChekedCallIds(callList.map((item) => item.id))
+    setIsPressedAllCheked(true)
+  }
+
+  const toogleChekedId = (id: number) => {
+    setChekedCallIds((prevIds) =>
+      prevIds.includes(id)
+        ? prevIds.filter((_id) => _id !== id)
+        : prevIds.concat(id)
+    )
+  }
+
   const filtredCallList = useMemo(() => {
     let filtredList: ICall[] = callList
 
@@ -109,7 +131,6 @@ const CallsPage: FC<Props> = ({ className }) => {
     return filtredList
   }, [callList, currentType.id, currentSource.id, currentGrade.id])
 
-  
   const [currentDateRange, setCurrentDateRange] = useState(() => {
     const { startDate, endDate } = dates[0]
 
@@ -173,7 +194,11 @@ const CallsPage: FC<Props> = ({ className }) => {
         <section
           className={cn(styles.table, isLoading && styles.table_loading)}>
           {isLoading && <Loader className={styles.table__loader} />}
-          <CallHeader />
+
+          <CallHeader
+            isCheked={isPressedAllCheked}
+            toggleCheckbox={toogleAllChekedIds}
+          />
 
           {Object.keys(callListByDate).map((date) => {
             const callList = callListByDate[date]
@@ -182,7 +207,14 @@ const CallsPage: FC<Props> = ({ className }) => {
               <Fragment key={date}>
                 <CallDate date={date} count={callList.length} />
                 {callList.map((callItem) => {
-                  return <CallItem key={callItem.id} {...callItem} />
+                  return (
+                    <CallItem
+                      key={callItem.id}
+                      isCheked={chekedCallIds.includes(callItem.id)}
+                      toggleCheckbox={toogleChekedId}
+                      {...callItem}
+                    />
+                  )
                 })}
               </Fragment>
             )
