@@ -9,7 +9,6 @@ import { ICall } from 'src/types/Call'
 import { ApiService } from 'src/service/api'
 import {
   callTypes,
-  DateItemType,
   employees,
   errorTypes,
   grades,
@@ -143,6 +142,7 @@ const CallsPage: FC<Props> = ({ className }) => {
     return table
   }, {} as { [date: string]: ICall[] })
 
+
   return (
     <main className={cn(className, styles.wrapper)}>
       <div className={cn(globalStyles.container, styles.container)}>
@@ -186,14 +186,15 @@ const CallsPage: FC<Props> = ({ className }) => {
 
             const dayMilliseconds = 24 * 60 * 60 * 1000
 
-            const currentDate = new Date()
+            const today = new Date()
+
             const yesterday = new Date(
-              currentDate.setTime(currentDate.getTime() - dayMilliseconds)
+              new Date().setTime(new Date().getTime() - dayMilliseconds)
             )
 
             const isToday =
               getDisplayDateTime(new Date(date)) ===
-              getDisplayDateTime(currentDate)
+              getDisplayDateTime(today)
 
             const isYesterday =
               getDisplayDateTime(new Date(date)) ===
