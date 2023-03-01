@@ -119,7 +119,7 @@ const CallsPage: FC<Props> = ({ className }) => {
     }
   })
 
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     ;(async () => {
