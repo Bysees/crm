@@ -24,7 +24,7 @@
     }
   }
 
-  .calendar {
+  &__date {
     margin-left: 50px;
   }
 }
@@ -32,7 +32,26 @@
 .table {
   border-radius: 12px;
   background-color: #fff;
+  position: relative;
+
+  &_loading {
+    user-select: none;
+    pointer-events: none;
+  }
+
+  &_loading .row {
+    opacity: 0.6;
+  }
+
+  &__loader {
+    z-index: 10;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%) scale(4);
+  }
 }
+
 
 
 .row {
@@ -115,7 +134,8 @@
     }
   }
 
-  .duration {}
+  .duration {
+  }
 }
 
 .rowDate {
@@ -144,7 +164,6 @@
 .pointer {
   cursor: pointer;
 }
-
 
 .missed {
   color: $red;

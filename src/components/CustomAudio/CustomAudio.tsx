@@ -1,18 +1,19 @@
-import { FC, MouseEventHandler, useLayoutEffect, useRef, useState } from 'react'
+import { FC, MouseEventHandler, MouseEvent, useLayoutEffect, useRef, useState } from 'react'
 import styles from './CustomAudio.module.scss'
 
 import { ReactComponent as PlayIcon } from 'icons/audio/play.svg'
 import { ReactComponent as StopIcon } from 'icons/audio/stop.svg'
-import { ReactComponent as ResetIcon } from 'icons/audio/reset.svg'
+import { ReactComponent as CloseIcon } from 'icons/audio/reset.svg'
 import { ReactComponent as LoadIcon } from 'icons/audio/load.svg'
 import { secondsToMinutes } from 'src/utils/time'
 
 interface Props {
   src: string
   type: string
+  onHide: (e: MouseEvent) => void
 }
 
-const CustomAudio: FC<Props> = ({ src, type }) => {
+const CustomAudio: FC<Props> = ({ src, type, onHide }) => {
   const [isPlaying, setIsPlaying] = useState(false)
 
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -49,7 +50,7 @@ const CustomAudio: FC<Props> = ({ src, type }) => {
   const reset = () => {
     if (!audioRef.current) return
     if (!progressRef.current) return
-
+    
     audioRef.current.pause()
     audioRef.current.currentTime = 0
     progressRef.current.value = 0
@@ -61,7 +62,7 @@ const CustomAudio: FC<Props> = ({ src, type }) => {
     if (!progressRef.current) return
 
     const stepWidth = progressRef.current.max / progressRef.current.clientWidth
-    const offsetDistance = e.clientX - e.currentTarget.offsetLeft
+    const offsetDistance = e.clientX - progressRef.current.getBoundingClientRect().left
     const currentTime = stepWidth * offsetDistance
 
     audioRef.current.currentTime = currentTime
@@ -180,8 +181,8 @@ const CustomAudio: FC<Props> = ({ src, type }) => {
         <LoadIcon />
       </button>
 
-      <button onClick={reset} className={styles.audio__reset}>
-        <ResetIcon />
+      <button onClick={onHide} className={styles.audio__close}>
+        <CloseIcon />
       </button>
     </div>
   )

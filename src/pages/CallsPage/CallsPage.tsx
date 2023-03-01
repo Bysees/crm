@@ -1,7 +1,6 @@
 import { FC, Fragment, useEffect, useMemo, useState } from 'react'
 import cn from 'classnames'
-import { Call } from './Call'
-import { Checkbox } from 'components/UI/Checkbox'
+import { CallItem } from './CallItem'
 import { Balance } from 'src/components/UI/Balance'
 import { FilterDate } from 'src/components/Filters/FilterDate'
 import { Filters } from 'src/components/Filters'
@@ -14,12 +13,15 @@ import {
   grades,
   sources,
   types,
-  dates,
+  dates
 } from 'src/pages/CallsPage/filters-mock'
 import { getDateTime, getDisplayDateTime } from 'src/utils/time'
 
 import styles from './Calls.module.scss'
 import globalStyles from 'styles/global.module.scss'
+import { CallHeader } from './CallHeader'
+import { CallDate } from './CallDate'
+import { Loader } from 'src/components/UI/Loader'
 
 interface Props {
   className?: string
@@ -107,8 +109,7 @@ const CallsPage: FC<Props> = ({ className }) => {
     return filtredList
   }, [callList, currentType.id, currentSource.id, currentGrade.id])
 
-  //* initial dates
-
+  
   const [currentDateRange, setCurrentDateRange] = useState(() => {
     const { startDate, endDate } = dates[0]
 
@@ -118,19 +119,24 @@ const CallsPage: FC<Props> = ({ className }) => {
     }
   })
 
+  const [isLoading, setIsLoading] = useState(true)
+
   useEffect(() => {
     ;(async () => {
       const { startDate, endDate } = currentDateRange
+      setIsLoading(true)
 
       const { results: callListData } = await ApiService.getList(
         startDate,
         endDate
       )
+
+      setIsLoading(false)
       setCallList(callListData)
     })()
   }, [currentDateRange.startDate, currentDateRange.endDate])
 
-  const tableCallList = filtredCallList.reduce((table, callItems) => {
+  const callListByDate = filtredCallList.reduce((table, callItems) => {
     const dateFormat = getDateTime(new Date(callItems.date))
 
     if (table[dateFormat]) {
@@ -142,7 +148,6 @@ const CallsPage: FC<Props> = ({ className }) => {
     return table
   }, {} as { [date: string]: ICall[] })
 
-
   return (
     <main className={cn(className, styles.wrapper)}>
       <div className={cn(globalStyles.container, styles.container)}>
@@ -152,7 +157,7 @@ const CallsPage: FC<Props> = ({ className }) => {
             <FilterDate
               dates={dates}
               setCurrentDateRange={setCurrentDateRange}
-              className={styles.calendar}
+              className={styles.filters__date}
             />
           </div>
 
@@ -165,55 +170,19 @@ const CallsPage: FC<Props> = ({ className }) => {
           </div>
         </section>
 
-        <section className={styles.table}>
-          <header className={cn(styles.row, styles.row_header)}>
-            <Checkbox
-              className={cn(styles.checkbox, true && styles.checkbox_visible)}
-              checked={false}
-              id='checkbox-head'
-            />
-            <div>Тип</div>
-            <div>Время</div>
-            <div>Сотрудник</div>
-            <div>Звонок</div>
-            <div>Источник</div>
-            <div className={styles.row__grade}>Оценка</div>
-            <div className={styles.row__duration}>Длительность</div>
-          </header>
+        <section
+          className={cn(styles.table, isLoading && styles.table_loading)}>
+          {isLoading && <Loader className={styles.table__loader} />}
+          <CallHeader />
 
-          {Object.keys(tableCallList).map((date) => {
-            const callRow = tableCallList[date]
-
-            const dayMilliseconds = 24 * 60 * 60 * 1000
-
-            const today = new Date()
-
-            const yesterday = new Date(
-              new Date().setTime(new Date().getTime() - dayMilliseconds)
-            )
-
-            const isToday =
-              getDisplayDateTime(new Date(date)) ===
-              getDisplayDateTime(today)
-
-            const isYesterday =
-              getDisplayDateTime(new Date(date)) ===
-              getDisplayDateTime(yesterday)
+          {Object.keys(callListByDate).map((date) => {
+            const callList = callListByDate[date]
 
             return (
               <Fragment key={date}>
-                {!isToday && (
-                  <div className={cn(styles.row, styles.row_date)}>
-                    <div className={styles.rowDate}>
-                      <div>{isYesterday ? 'вчера' : getDisplayDateTime(new Date(date))}</div>
-                      <div className={styles.rowDate__count}>
-                        {callRow.length}
-                      </div>
-                    </div>
-                  </div>
-                )}
-                {callRow.map((callItem) => {
-                  return <Call key={callItem.id} {...callItem} />
+                <CallDate date={date} count={callList.length} />
+                {callList.map((callItem) => {
+                  return <CallItem key={callItem.id} {...callItem} />
                 })}
               </Fragment>
             )

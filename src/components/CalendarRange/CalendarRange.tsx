@@ -21,6 +21,10 @@ const CalendarRange: FC<Props> = ({ setRangeDate, startDate, endDate }) => {
   }
 
   const handleClickButton = () => {
+    if(!dates.startDate || !dates.endDate) {
+      return
+    }
+    
     setRangeDate(dates.startDate, dates.endDate)
   }
 

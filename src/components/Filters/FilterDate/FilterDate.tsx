@@ -30,17 +30,19 @@ const FilterDate: FC<Props> = ({ className, dates, setCurrentDateRange }) => {
   }
 
   const setPrevDateRange = () => {
-    setDateRange((prevDateRange) => {
-      const index = _dates.findIndex((item) => item.id === prevDateRange.id)
-      return index === 0 ? prevDateRange : _dates[index - 1]
-    })
+    // TODO - Пока выключил, т.к. работает некорректно и нужно переделать  
+    // setDateRange((prevDateRange) => {
+    //   const index = _dates.findIndex((item) => item.id === prevDateRange.id)
+    //   return index === 0 ? prevDateRange : _dates[index - 1]
+    // })
   }
 
   const setNextDateRange = () => {
-    setDateRange((prevDateRange) => {
-      const index = _dates.findIndex((item) => item.id === prevDateRange.id)
-      return index === _dates.length - 1 ? prevDateRange : _dates[index + 1]
-    })
+    // TODO - Пока выключил, т.к. работает некорректно и нужно переделать  
+    // setDateRange((prevDateRange) => {
+    //   const index = _dates.findIndex((item) => item.id === prevDateRange.id)
+    //   return index === _dates.length - 1 ? prevDateRange : _dates[index + 1]
+    // })
   }
 
   const setMockDatesRange = (_dateRange: DateItemType) => () => {

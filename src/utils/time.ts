@@ -28,7 +28,7 @@ export const getDateTime = (date: Date) => {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const day = date.getDate().toString().padStart(2, '0');
-  
+
   //* return: YYYY-MM-DD
   return `${year}-${month}-${day}`;
 }
@@ -36,7 +36,7 @@ export const getDateTime = (date: Date) => {
 export const getDateTimeAgo = (count: number, type: 'day' | 'month' | 'year') => {
   const currentDate = new Date();
   let startDate;
-  
+
   if (type === 'day') {
     startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - count + 1);
 
@@ -54,9 +54,58 @@ export const getDateTimeAgo = (count: number, type: 'day' | 'month' | 'year') =>
   }
 
   const dateTimeAgo = startDate.toISOString().slice(0, 10);
-  
+
   //* return: YYYY-MM-DD
   return dateTimeAgo
+}
+
+export const getRelativeDate = (date: 'today' | 'yesterday' | 'before-yesterday') => {
+  const dayMilliseconds = 24 * 60 * 60 * 1000
+
+  if (date === 'today') {
+    const today = new Date()
+
+    return today
+  }
+
+  if (date === 'yesterday') {
+    const yesterday = new Date(
+      new Date().setTime(new Date().getTime() - dayMilliseconds)
+    )
+
+    return yesterday
+  }
+
+  if (date === 'before-yesterday') {
+    const beforeYesterday = new Date(
+      new Date().setTime(new Date().getTime() - dayMilliseconds * 2)
+    )
+
+    return beforeYesterday
+  }
+
+  throw Error('Invalid arguments')
+}
+
+export const getRelativeDisplayDate = (date: string): 'сегодня' | 'вчера' | 'позавчера' | string => {
+  const displayDate = getDisplayDateTime(new Date(date))
+  const today = getDisplayDateTime(getRelativeDate('today'))
+  const yesterday = getDisplayDateTime(getRelativeDate('yesterday'))
+  const beforeYesterday = getDisplayDateTime(getRelativeDate('before-yesterday'))
+
+  if (displayDate === today) {
+    return 'сегодня'
+  }
+
+  if (displayDate === yesterday) {
+    return 'вчера'
+  }
+
+  if (displayDate === beforeYesterday) {
+    return 'позавчера'
+  }
+
+  return displayDate
 }
 
 
