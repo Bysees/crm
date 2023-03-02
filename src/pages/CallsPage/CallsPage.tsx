@@ -111,19 +111,19 @@ const CallsPage: FC<Props> = ({ className }) => {
   const filtredCallList = useMemo(() => {
     let filtredList: ICall[] = callList
 
-    if (currentType.value !== null) {
+    if (currentType.value !== 'all') {
       filtredList = filtredList.filter(
         (callItem) => callItem.in_out === currentType.value
       )
     }
 
-    if (currentSource.value !== null) {
+    if (currentSource.value !== 'all') {
       filtredList = filtredList.filter(
         (callItem) => callItem.source === currentSource.value
       )
     }
 
-    if (currentGrade.value !== null) {
+    if (currentGrade.value !== 'all') {
       filtredList = filtredList.filter(
         (callItem) => callItem.errors[0] === currentGrade.value
       )

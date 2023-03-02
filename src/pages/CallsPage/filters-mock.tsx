@@ -3,7 +3,7 @@ import { Crumbs } from 'components/UI/Crumbs'
 import { Grade } from 'components/UI/Grade'
 
 export const types = [
-  { id: 0, content: 'Все типы', value: null },
+  { id: 0, content: 'Все типы', value: 'all' },
   { id: 1, content: 'Входящие', value: 0 },
   { id: 2, content: 'Исходящие', value: 1 }
 ]
@@ -23,7 +23,7 @@ export const callTypes = [
 ]
 
 export const sources = [
-  { id: 0, content: 'Все источники', value: null },
+  { id: 0, content: 'Все источники', value: 'all' },
   { id: 1, content: 'Yandex', value: 'Yandex' }
 ]
 
@@ -39,7 +39,7 @@ export const errorTypes = [
 ]
 
 export const grades = [
-  { id: 0, content: 'Все оценки', value: null },
+  { id: 0, content: 'Все оценки', value: 'all' },
   { id: 1, content: 'Распознать', value: null },
   { id: 2, content: 'Скрипт не использован', value: 'Скрипт не использован' },
   { id: 3, content: <Grade type='bad' />, value: null },
