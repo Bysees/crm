@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import cn from 'classnames'
+import { Checkbox } from 'components/UI/Checkbox'
 import styles from './Calls.module.scss'
-import { Checkbox } from 'src/components/UI/Checkbox'
 
 interface Props {
   toggleCheckbox: () => void

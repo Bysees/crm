@@ -1,6 +1,6 @@
 import { FC, useState } from 'react'
 import cn from 'classnames'
-import { Button } from 'src/components/UI/Button'
+import { Button } from 'components/UI/Button'
 import styles from './Sidebar.module.scss'
 
 import logo from 'icons/logo.svg'

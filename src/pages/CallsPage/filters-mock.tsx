@@ -1,6 +1,6 @@
 import { getDateTimeAgo, getDateTime } from 'src/utils/time'
-import { Crumbs } from '../../components/UI/Crumbs'
-import { Grade } from '../../components/UI/Grade'
+import { Crumbs } from 'components/UI/Crumbs'
+import { Grade } from 'components/UI/Grade'
 
 export const types = [
   { id: 0, content: 'Все типы', value: null },

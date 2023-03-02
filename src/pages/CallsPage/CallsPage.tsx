@@ -1,11 +1,14 @@
 import { FC, Fragment, useEffect, useMemo, useState } from 'react'
 import cn from 'classnames'
+import { FilterDate } from 'components/Filters/FilterDate'
+import { Balance } from 'components/UI/Balance'
+import { Loader } from 'components/UI/Loader'
+import { Filters } from 'components/Filters'
+import { CallHeader } from './CallHeader'
+import { CallDate } from './CallDate'
 import { CallItem } from './CallItem'
-import { Balance } from 'src/components/UI/Balance'
-import { FilterDate } from 'src/components/Filters/FilterDate'
-import { Filters } from 'src/components/Filters'
-import { ICall } from 'src/types/Call'
-import { ApiService } from 'src/service/api'
+import { ICall } from 'types/Call'
+import { ApiService } from 'service/api'
 import {
   callTypes,
   employees,
@@ -19,9 +22,7 @@ import { getDateTime } from 'src/utils/time'
 
 import styles from './Calls.module.scss'
 import globalStyles from 'styles/global.module.scss'
-import { CallHeader } from './CallHeader'
-import { CallDate } from './CallDate'
-import { Loader } from 'src/components/UI/Loader'
+
 
 interface Props {
   className?: string

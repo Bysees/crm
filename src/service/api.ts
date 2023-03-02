@@ -1,5 +1,5 @@
 import axios from "axios"
-import { ICall } from "src/types/Call"
+import { ICall } from "types/Call"
 
 const TOKEN = import.meta.env.VITE_TOKEN
 const baseURL = import.meta.env.VITE_API_URL
