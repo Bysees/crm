@@ -13,15 +13,12 @@ import { ReactComponent as IncomingIcon } from 'icons/incoming.svg'
 import { ReactComponent as OutgoingIcon } from 'icons/outgoing.svg'
 import { ReactComponent as WebIcon } from 'icons/web.svg'
 import mockAvatar from 'images/ava2.png'
+import { callsActions, useActions, useAppSelector } from 'src/store'
+import { grades } from 'src/components/Filters/filters-mock'
 
-interface Props extends ICall {
-  isCheked: boolean
-  toggleCheckbox: (id: number) => void
-}
+interface Props extends ICall {}
 
 const CallItem: FC<Props> = ({
-  toggleCheckbox,
-  isCheked,
   id,
   in_out,
   date,
@@ -30,19 +27,23 @@ const CallItem: FC<Props> = ({
   source,
   time,
   status,
-  errors,
   from_site,
   partnership_id,
   record,
-  person_name
+  person_name,
+  grade
 }) => {
   const hasPersonName = !person_name.includes('**')
   const hasAvatar = !person_avatar.includes('noavatar.jpg')
   const avatarSrc = hasAvatar ? person_avatar : mockAvatar
-  const hasError = !!errors[0]
   const isIncoming = in_out === 1
   const isFailedCall = status === 'Не дозвонился'
   const hasRecord = !!record
+
+  const isChecked = useAppSelector((state) =>
+    state.calls.items.checkedIds.includes(id)
+  )
+  const { toogleCheckedId } = useActions(callsActions)
 
   const [audio, setAudio] = useState<Blob | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -75,8 +76,8 @@ const CallItem: FC<Props> = ({
   return (
     <div className={cn(styles.row, styles.row_content)}>
       <Checkbox
-        onChange={() => toggleCheckbox(id)}
-        checked={isCheked}
+        onChange={() => toogleCheckedId(id)}
+        checked={isChecked}
         id={String(id)}
       />
 
@@ -107,7 +108,7 @@ const CallItem: FC<Props> = ({
       <div className={styles.source}>{source}</div>
 
       <div className={styles.grade}>
-        {hasError && <div className={styles.grade__error}>{errors[0]}</div>}
+        <div className={styles.grade__error}>{grades[grade].content}</div>
       </div>
 
       <div

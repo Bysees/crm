@@ -1,29 +1,34 @@
-import { Dispatch, ReactNode, SetStateAction, useState, memo } from 'react'
+import { useState, memo } from 'react'
 import cn from 'classnames'
 import { Dropdown } from 'components/Dropdown'
 import { ToggleButton } from 'components/UI/ToggleButton'
 import styles from './Filters.module.scss'
+import { useActions, useAppSelector } from 'src/store'
+import { filterItems } from 'src/components/Filters/filters-mock'
+import { callsFiltersActions } from 'src/store/slices'
 
-interface Props<T> {
-  activeItem: T
-  items: T[]
-  setActiveItem: Dispatch<SetStateAction<T>>
+interface Props {
+  filter: keyof typeof filterItems
 }
 
-const Filter = memo(<T extends { id: number; content: ReactNode }>({
-  items,
-  activeItem,
-  setActiveItem
-}: Props<T>) => {
+const Filter = memo(({ filter }: Props) => {
   const [isOpenDropdown, setIsOpenDropdown] = useState(false)
-
   const closeDropdown = () => {
     setIsOpenDropdown(false)
   }
-
   const toogleDropDrown = () => {
     setIsOpenDropdown((v) => !v)
   }
+
+  const filterValue = useAppSelector(
+    (state) => state.calls.filter.filterByCriteria[filter]
+  )
+  const { setFilter } = useActions(callsFiltersActions)
+
+  const filterTable = filterItems[filter]
+  const filterList = Object.values(filterTable)
+  //@ts-ignore
+  const activeFilter = filterTable[filterValue].content
 
   return (
     <Dropdown
@@ -32,7 +37,7 @@ const Filter = memo(<T extends { id: number; content: ReactNode }>({
       onHide={closeDropdown}>
       <Dropdown.Head>
         <div className={styles.filter__head}>
-          <div className={styles.filter__title}>{activeItem.content}</div>
+          <div className={styles.filter__title}>{activeFilter}</div>
           <ToggleButton
             type='arrow-small'
             isAcitve={isOpenDropdown}
@@ -41,16 +46,16 @@ const Filter = memo(<T extends { id: number; content: ReactNode }>({
         </div>
       </Dropdown.Head>
       <Dropdown.List>
-        {items.map((item) => {
+        {filterList.map(({ content, value }) => {
           return (
             <div
-              onClick={() => setActiveItem(item)}
+              onClick={() => setFilter({ [filter]: value })}
               className={cn(
                 styles.filter__item,
-                activeItem.id === item.id && styles.filter__item_active
+                filterValue === value && styles.filter__item_active
               )}
-              key={item.id}>
-              {item.content}
+              key={value}>
+              {content}
             </div>
           )
         })}

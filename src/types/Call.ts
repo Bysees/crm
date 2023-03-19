@@ -34,6 +34,15 @@ export interface IStage {
   disconnect_reason: string;
 }
 
+export type GradeUnion = 'no-script' | 'unknown' | 'great' | 'good' | 'bad'
+export type SourceUnion = 'yandex' | 'google' | 'opera' | 'firefox'
+
+export enum CallTypes {
+  Incoming = 0,
+  Outcoming = 1
+}
+
+export type CallTypeUnion = keyof typeof CallTypes
 
 export interface ICall {
   id: number;
@@ -50,9 +59,9 @@ export interface ICall {
   status: 'Не дозвонился' | 'Дозвонился';
   record: string; //* id записи звонка
   line_number: string;
-  in_out: 0 | 1;  //* входящий / исходящий
+  in_out: CallTypes;  //* входящий / исходящий
   from_site: number;
-  source: string;
+
   errors: string[];
   disconnect_reason: string;
   results: IResult[];
@@ -64,4 +73,26 @@ export interface ICall {
   person_name: string;
   person_surname: string;
   person_avatar: string;
+
+  //* Кастомное свойство для тестовой фильтрации (с api они не приходят)
+  grade: GradeUnion;
+
+  //* Смешанное свойство для тестовой фильтрации
+  source: SourceUnion;
 }
+
+export type FilterByCriteria = {
+  callType: 'all' | CallTypeUnion
+  source: 'all' | SourceUnion
+  grade: 'all' | GradeUnion
+}
+
+export type FilterDateTitle = 'days3' | 'week' | 'month' | 'year' | 'input'
+
+export type FilterByDate = {
+  title: FilterDateTitle
+  startDate: string
+  endDate: string
+}
+
+

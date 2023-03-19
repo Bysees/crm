@@ -1,15 +1,10 @@
-import { FC } from 'react'
+import { FC, InputHTMLAttributes } from 'react'
 import cn from 'classnames'
 import styles from './Checkbox.module.scss'
 
 import { ReactComponent as CheckedIcon } from 'icons/checked.svg'
 
-interface Props {
-  className?: string
-  id: string
-  onChange: () => void
-  checked: boolean
-}
+interface Props extends InputHTMLAttributes<HTMLInputElement> {}
 
 const Checkbox: FC<Props> = ({ onChange, className, id, checked }) => {
   return (

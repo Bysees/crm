@@ -1,0 +1,1 @@
+export { getFiltredCallList } from './callsSelectors'

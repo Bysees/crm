@@ -6,10 +6,10 @@ import styles from './CalendarRange.module.scss'
 interface Props {
   startDate: string
   endDate: string
-  setRangeDate: (startDate: string, endDate: string) => void
+  setDateRange: (startDate: string, endDate: string) => void
 }
 
-const CalendarRange: FC<Props> = ({ setRangeDate, startDate, endDate }) => {
+const CalendarRange: FC<Props> = ({ setDateRange, startDate, endDate }) => {
   const [dates, setDates] = useState({ startDate: startDate, endDate: endDate })
 
   const setStartDate = (startDate: string) => {
@@ -25,7 +25,7 @@ const CalendarRange: FC<Props> = ({ setRangeDate, startDate, endDate }) => {
       return
     }
     
-    setRangeDate(dates.startDate, dates.endDate)
+    setDateRange(dates.startDate, dates.endDate)
   }
 
   return (

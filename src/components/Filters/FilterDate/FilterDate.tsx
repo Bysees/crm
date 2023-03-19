@@ -1,145 +1,108 @@
-import { Dispatch, FC, ReactNode, SetStateAction, useState } from 'react'
+import { FC, useState } from 'react'
 import cn from 'classnames'
 import { Dropdown } from 'components/Dropdown'
-import { DateItemType } from '../../../pages/CallsPage/filters-mock'
+import { SelectedDateFilter } from './SelectedDateFilter'
+import { DateFilterItemInput } from './DateFilterItemInput'
+import { DateFilterItem } from './DateFilterItem'
+import { FilterByDate } from 'src/types/Call'
+import { getDateTime, getDateTimeAgo } from 'src/utils/time'
+import { useActions, useAppSelector } from 'src/store'
+import { callsFiltersActions } from 'src/store/slices'
 import styles from './FilterDate.module.scss'
 
 import { ReactComponent as ArrowLeftIcon } from 'icons/arrow-filter-left.svg'
 import { ReactComponent as ArrowRightIcon } from 'icons/arrow-filter-right.svg'
 import { ReactComponent as CalendarIcon } from 'icons/calendar.svg'
-import { CalendarRange } from 'src/components/CalendarRange'
-import { CalendarDisplayDate } from 'src/components/CalendarRange/CalendarDisplayDate'
 
+export const dates = [
+  {
+    title: 'days3' as const,
+    startDate: getDateTimeAgo(3, 'day'),
+    endDate: getDateTime(new Date())
+  },
+  {
+    title: 'week' as const,
+    startDate: getDateTimeAgo(7, 'day'),
+    endDate: getDateTime(new Date())
+  },
+  {
+    title: 'month' as const,
+    startDate: getDateTimeAgo(1, 'month'),
+    endDate: getDateTime(new Date())
+  },
+  {
+    title: 'year' as const,
+    startDate: getDateTimeAgo(1, 'year'),
+    endDate: getDateTime(new Date())
+  }
+]
+
+export const dateRu = {
+  'days3': '3 Дня',
+  'week': 'Неделя',
+  'month': 'Месяц',
+  'year': 'Год'
+}
 interface Props {
   className?: string
-  dates: DateItemType[]
-  setCurrentDateRange: Dispatch<
-    SetStateAction<{ startDate: string; endDate: string }>
-  >
 }
 
-const FilterDate: FC<Props> = ({ className, dates, setCurrentDateRange }) => {
-  const [_dates, setDates] = useState(dates)
-  const [dateRange, setDateRange] = useState<DateItemType>(_dates[0])
-
+const FilterDate: FC<Props> = ({ className }) => {
   const [isOpenDropdown, setIsOpenDropdown] = useState(false)
   const closeDropdown = () => setIsOpenDropdown(false)
+  const toogleDropDrown = () => setIsOpenDropdown(!isOpenDropdown)
 
-  const toogleDropDrown = () => {
-    setIsOpenDropdown(!isOpenDropdown)
+  const filterByDate = useAppSelector(
+    (state) => state.calls.filter.filterByDate
+  )
+
+  const { setDateFilter } = useActions(callsFiltersActions)
+
+  const setDateRange = (date: FilterByDate) => () => {
+    setDateFilter(date)
   }
 
-  const setPrevDateRange = () => {
-    // TODO - Пока выключил, т.к. работает некорректно и нужно переделать  
-    // setDateRange((prevDateRange) => {
-    //   const index = _dates.findIndex((item) => item.id === prevDateRange.id)
-    //   return index === 0 ? prevDateRange : _dates[index - 1]
-    // })
-  }
-
-  const setNextDateRange = () => {
-    // TODO - Пока выключил, т.к. работает некорректно и нужно переделать  
-    // setDateRange((prevDateRange) => {
-    //   const index = _dates.findIndex((item) => item.id === prevDateRange.id)
-    //   return index === _dates.length - 1 ? prevDateRange : _dates[index + 1]
-    // })
-  }
-
-  const setMockDatesRange = (_dateRange: DateItemType) => () => {
-    setDateRange(_dateRange)
-    const { startDate, endDate } = _dateRange
-
-    setCurrentDateRange({ startDate, endDate })
-  }
-
-  const setManuallyDatesRange = (startDate: string, endDate: string) => {
-    const newDates = _dates.map((date) => {
-      if (date.content === 'manually') {
-        return { ...date, startDate, endDate }
-      }
-      return date
+  const setInputDateRange = (startDate: string, endDate: string) => {
+    setDateFilter({
+      title: 'input',
+      startDate: startDate,
+      endDate: endDate
     })
-
-    setDateRange(newDates.filter((date) => date.content === 'manually')[0])
-    setDates(newDates)
-
-    setCurrentDateRange({ startDate, endDate })
   }
 
   return (
     <div className={cn(className, styles.calendar)}>
       <Dropdown isOpen={isOpenDropdown} onHide={closeDropdown}>
         <Dropdown.Head>
-          <div className={styles.calendar__buttons}>
+          <div className={styles.calendar__title}>
             <button
-              onClick={setPrevDateRange}
-              className={styles.calendar__button}>
-              <ArrowLeftIcon />
-            </button>
-
-            <button
-              className={cn(
-                styles.calendar__button,
-                styles.calendar__button_text
-              )}
+              className={styles.calendar__button}
               onClick={toogleDropDrown}>
-              <CalendarIcon />
-              {dateRange.content === 'manually' ? (
-                <div className={styles.datesRange}>
-                  <CalendarDisplayDate date={dateRange.startDate} />
-                  <span className={styles.datesRange__line}>-</span>
-                  <CalendarDisplayDate date={dateRange.endDate} />
-                </div>
-              ) : (
-                dateRange.content
-              )}
-            </button>
-
-            <button
-              onClick={setNextDateRange}
-              className={styles.calendar__button}>
-              <ArrowRightIcon />
+              <ArrowLeftIcon className={styles.icon__arrowLeft} />
+              <CalendarIcon className={styles.icon__calendar} />
+              <SelectedDateFilter dateRange={filterByDate} />
+              <ArrowRightIcon className={styles.icon__arrowRight} />
             </button>
           </div>
         </Dropdown.Head>
 
         <Dropdown.List>
-          {_dates.map((dateRangeItem) => {
-            if (dateRangeItem.content === 'manually') {
-              return (
-                <div
-                  key={dateRangeItem.id}
-                  className={cn(styles.calendar__item, styles.calendar__date)}>
-                  <div
-                    className={cn(
-                      styles.calendar__date_title,
-                      dateRangeItem.id === dateRange.id &&
-                        styles.calendar__item_active
-                    )}>
-                    Указать даты
-                  </div>
-                  <CalendarRange
-                    startDate={dateRange.startDate}
-                    endDate={dateRange.endDate}
-                    setRangeDate={setManuallyDatesRange}
-                  />
-                </div>
-              )
-            }
-
+          {dates.map((date) => {
+            const isSelected = filterByDate.title === date.title
             return (
-              <div
-                key={dateRangeItem.id}
-                onClick={setMockDatesRange(dateRangeItem)}
-                className={cn(
-                  styles.calendar__item,
-                  dateRangeItem.id === dateRange.id &&
-                    styles.calendar__item_active
-                )}>
-                {dateRangeItem.content}
-              </div>
+              <DateFilterItem
+                key={date.title}
+                content={dateRu[date.title]}
+                isSelected={isSelected}
+                setDateRange={setDateRange(date)}
+              />
             )
           })}
+
+          <DateFilterItemInput
+            dateRange={filterByDate}
+            setDateRange={setInputDateRange}
+          />
         </Dropdown.List>
       </Dropdown>
     </div>

@@ -18,9 +18,7 @@ class ApiService {
       params: {
         date_start: dateStart,
         date_end: dateEnd,
-        limit: 300,
-        // in_out: 1
-        // sources: ['yandex', 'google']
+        limit: 50,
       }
     })
     
